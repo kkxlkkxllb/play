@@ -321,7 +321,7 @@ window.PageWork = function () {
                     y: 0,
                     index: c,
                     inner: h,
-                    clickProxy: new ClickProxy(e, T, this),
+                    // clickProxy: new ClickProxy(e, T, this),
                     wip: l,
                     url: ''//e.getElementsByTagName("a")[0].href
                 }

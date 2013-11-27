@@ -1,10 +1,4 @@
-var Config = {
-    colors: "#e91b00 #fd6000 #ff9500 #ffd200 #c4d000 #0ea5b4 #0052DA #7d4acc".split(" "),
-    strings: {
-        navOpen: "menu",
-        navClose: "close"
-    }
-}, isTouch = "ontouchstart" in window,
+var isTouch = "ontouchstart" in window,
     Events = {
         DOWN: isTouch ? "touchstart" : "mousedown",
         UP: isTouch ? "touchend" : "mouseup",
@@ -17,23 +11,9 @@ var Config = {
         MENU_CLOSE: "menuClose",
         MENU_TAP_ACTIVE: "menuTapActive"
     }, Microsite = function () {
-        function a(a,
-            c) {
-            if (a != n && a != l || c) f && b(), Preloader.show(), n = a, f = !0, p.animOut && p.animOut(), s.style.opacity = 0, Utils.transition(s, "opacity", "200ms ease-in-out"), B = setTimeout(function () {
-                s.style.visibility = "hidden";
-                Utils.resetTransition(s);
-                g.open("GET", a, !0);
-                g.send();
-                Main.hideLocationBar()
-            }, 201), d(a), q.fire(Events.NAVIGATE, {
-                url: a
-            })
-        }
-
         function b() {
             clearTimeout(B);
             g.abort();
-            // Preloader.hide();
             var a = s.getElementsByTagName("img"),
                 b;
             for (b in a) a[b].onload = a[b].onerror = null
@@ -66,7 +46,6 @@ var Config = {
         }
 
         function e() {
-            // Preloader.hide();
             setTimeout(function () {
                 Sys.isAndroid && 4 <= Sys.androidVersion &&
                     Main.resize();
@@ -76,11 +55,6 @@ var Config = {
                 t.onAnimIn()
             }, 125)
         }
-
-        function d(a) {
-            Tracker.trackPage(a)
-        }
-
         function k(a, b) {
             var c = b.indexOf("<" + a),
                 c = b.indexOf(">", c),
@@ -122,7 +96,6 @@ var Config = {
                     }, !1)
                 }
             },
-            navigate: a,
             animIn: e,
             getPage: function () {
                 return p
@@ -139,131 +112,20 @@ var Config = {
                 }
             },
             dispatcher: q,
-            trackPage: d,
-            trackEvent: function (a,
-                b) {
-                Tracker.trackEvent(a, b)
-            },
             callbacks: t
         }
     }(),
-    Preloader = function () {
-        function a() {
-            var a = Sys.isMobile ? window.innerWidth : Main.stage.width,
-                b = Sys.isMobile ? window.innerHeight : Main.stage.height;
-            d = Math.round(0.5 * a + f);
-            k = Math.round(0.5 * b + l);
-            "none" != m.style.display && (m.style.width = a + 120 + "px", m.style.height = b + 280 + "px")
-        }
 
-        function b(a) {
-            f = a.offsetX || 0;
-            l = a.offsetY || 0;
-            if (a.colors) {
-                for (var b = c; b--;) h[b].el.style.backgroundColor = a.colors[b % a.colors.length];
-                m.style.backgroundColor = a.bg || "#FFFFFF"
-            }
-        }
-        var c = 8,
-            h = [],
-            e, d, k, g, q =
-                0,
-            f, l, n, r, m;
-        return {
-            init: function () {
-                g = 0.75 > Sys.deviceScaleFactor ? 0.75 : Sys.deviceScaleFactor;
-                e = document.createElement("div");
-                e.style.position = "absolute";
-                e.style.left = "0px";
-                e.style.top = "0px";
-                e.style.visibility = "hidden";
-                Utils.setTransformOrigin(e, "0% 0%");
-                for (var a = 0, b = 2 * Math.PI / c, d = c; d--;) {
-                    var k = {
-                        x: -3 + 13 * Math.cos(a),
-                        y: -3 + 13 * Math.sin(a),
-                        angle: a
-                    }, f = document.createElement("div");
-                    f.style.position = "absolute";
-                    f.style.width = "6px";
-                    f.style.height = "6px";
-                    f.style.backgroundColor = Config.colors[d % Config.colors.length];
-                    f.style[Utils.vendorPrefix + "border-radius"] = f.style["border-radius"] = "4px";
-                    Utils.transform2(f, k.x, k.y);
-                    e.appendChild(f);
-                    k.el = f;
-                    h[d] = k;
-                    a += b
-                }
-                m = document.createElement("div");
-                m.style.position = "absolute";
-                m.style.left = "-5px";
-                m.style.top = "-5px";
-                m.style.zIndex = 99989;
-                m.style.display = "none";
-                m.style.backgroundColor = "#FFFFFF";
-                play("main").appendChild(m);
-                play("main").appendChild(e)
-            },
-            show: function (c, h, f) {
-                h = h || 750;
-                b(f || {
-                    offsetX: 0,
-                    offsetY: 0,
-                    colors: Config.colors,
-                    bg: "#FFFFFF"
-                });
-                c ? (m.style.display = "block", e.style.zIndex =
-                    99990) : 1003 != e.style.zIndex && (e.style.zIndex = 1003);
-                window.addEventListener("resize", a, !1);
-                Microsite.dispatcher.on(Events.SIMULATOR_ROTATE, a);
-                a();
-                e.style.visibility = "visible";
-                e.style.opacity = 0;
-                n = setTimeout(function () {
-                    e.style.opacity = 1;
-                    Utils.transition(e, "opacity", h + "ms ease-in-out")
-                }, 0);
-                var l = g;
-                r = setInterval(function () {
-                    q += 0.15;
-                    l = l < g ? l + 0.2 : g;
-                    Utils.transform2(e, d, k, l, q)
-                }, 1E3 / 60)
-            },
-            hide: function () {
-                window.removeEventListener("resize", a, !1);
-                Microsite.dispatcher.off(Events.SIMULATOR_ROTATE, a);
-                // "block" == m.style.display &&
-                //     (m.style.display = "none");
-                clearTimeout(n);
-                e.style.opacity = 0;
-                Utils.transition(e, "opacity", "250ms ease-in-out");
-                n = setTimeout(function () {
-                    clearInterval(r);
-                    e.style.visibility = "hidden"
-                }, 251)
-            },
-            resize: a
-        }
-    }(),
     Main = function () {
         function a() {
             document.removeEventListener("DOMContentLoaded", a, !1);
-            q();
             document.body.style.visibility = "visible";
-            Sys.isMobile || (Sys.deviceScaleFactor = 1, m = s.isSimulatorActive = !0, Simulator.init());
-            Sys.isMobile && play("awards-container") && (play("awards-container").style.display = "none");
-            Preloader.init();
-            Preloader.show(!0)
         }
 
         function b() {
             window.removeEventListener("load", b, !1);
             f = p.el = play("main");
             r = play("page-holder");
-            n = play("nav");
-            n.style.opacity = 0;
             if (Sys.isMobile) {
                 var a = document.createElement("div");
                 a.style.position = "relative";
@@ -271,21 +133,11 @@ var Config = {
                 a.style.height = "20%";
                 document.body.appendChild(a)
             }
-            h();
             g();
-            // Menu.init();
             Microsite.dispatcher.on(Events.MENU_OPEN, e);
             Microsite.dispatcher.on(Events.MENU_CLOSE, e);
             Microsite.init();
             if (!Sys.isMobile) Microsite.dispatcher.on(Events.SIMULATOR_ROTATE, d);
-            // Tracker.init();
-            // a = document.querySelector("div.menu-info-inner ul").children;
-            // Tracker.addTrackEvent(a[0], "menu", "mail");
-            // Tracker.addTrackEvent(a[1], "menu", "phone");
-            // Tracker.addTrackEvent(a[2], "menu", "twitter");
-            // Tracker.addTrackEvent(a[3], "menu", "map");
-            // Tracker.addTrackEvent(play("nav-stripe-2"), "menu", "about-us");
-            // Tracker.addTrackEvent(play("nav-stripe-1"), "menu", "contact");
             window.addEventListener("resize", d, !1);
             document.body.addEventListener("orientationchange", d, !1);
             d(null);
@@ -296,36 +148,7 @@ var Config = {
 
         function c() {
             document.body.style.visibility = "visible";
-            m && Simulator.animIn();
-            setTimeout(function () {
-                l.style.opacity = 1;
-                Utils.transition(play("logo"), "opacity", "0.65s ease-in-out")
-            }, 0);
-            setTimeout(function () {
-                n.style.opacity = 1;
-                Utils.transition(play("nav"), "opacity", "0.65s ease-in-out")
-            }, 250);
             setTimeout(Microsite.animIn, 400)
-        }
-
-        function h() {
-            l = play("logo");
-            l.style.opacity = 0;
-            if (l.parentNode.href) {
-                Sys.isMobile || f.appendChild(l.parentNode.parentNode);
-                var a = l.parentNode.href;
-                l.parentNode.href = "javascript:void(0)";
-                l.parentNode.addEventListener(Sys.supports.touch ? "touchstart" : "click", function () {
-                    Utils.resetTransition(l);
-                    l.style.opacity = 0.25;
-                    setTimeout(function () {
-                        l.style.opacity = 1;
-                        Utils.transition(l, "all", "375ms ease-in-out")
-                    }, 0);
-                    Microsite.navigate(a)
-                }, !1);
-                Sys.supports.touch && Utils.addClass(l.parentNode, "no-hover")
-            }
         }
 
         function e(a) {
@@ -333,7 +156,6 @@ var Config = {
         }
 
         function d(a) {
-            q();
             k();
             if (Sys.isMobile) {
                 a = window.innerWidth;
@@ -345,7 +167,6 @@ var Config = {
             }
             document.getElementsByTagName("html")[0].className = p.isPortrait ? "portrait" : "landscape";
             Microsite.getPage().resize();
-            // Menu.resize()
         }
 
         function k() {
@@ -374,10 +195,6 @@ var Config = {
             }, !1))
         }
 
-        function q() {
-            Sys.isAndroid || (0 < document.body.scrollLeft ||
-                1 != document.body.scrollTop) && window.scrollTo(0, 1)
-        }
         var f, l, n, r, m = !1,
             p = {
                 x: 0,
@@ -400,251 +217,10 @@ var Config = {
                     a, !1), window.addEventListener("load", b, !1))
             },
             resize: d,
-            updateStageSize: k,
-            mouseGlobalToLocal: function (a) {
-                return m ? Simulator.mouseGlobalToLocal(a) : a
-            },
-            hideLocationBar: q
+            updateStageSize: k
         }
     }(),
-    Tracker = function () {
-        var a = {}, b;
-        a.init = function () {
-            b = window._gaq || []
-        };
-        a.trackPage = function (a) {
-            b.push(["_trackPageview", a])
-        };
-        a.trackEvent = function () {
-            b.push(["_trackEvent"].concat(Array.prototype.slice.call(arguments)))
-        };
-        a.addTrackEvent = function (a, b, e, d) {
-            try {
-                a.addEventListener(Events.DOWN, Utils.delegate(this, Tracker.trackEvent, b, e, d), !1)
-            } catch (k) {
-                console.log("Error Tracker.addTrackEvent " + [a, b, e, d])
-            }
-        };
-        return a
-    }(),
-    Menu = function () {
-        var a, b, c, h, e, d, k, g, q, f, l = "",
-            n, r = [],
-            m = window.location.href,
-            p, s, y = !1,
-            x = function (a) {
-                for (var b = r.length; b--;)
-                    if (-1 != a.indexOf(r[b].url)) return b;
-                return -1
-            }, B = function (a) {
-                n ? A() : z()
-            }, t = function (a) {
-                m != a.url && void 0 != a.url && (m = a.url, v(x(m)), n && A())
-            }, u = function (a) {
-                a.preventDefault();
-                if ("click" == a.type && Sys.supports.touch) a.target.blur();
-                else if (m == a.currentTarget._href) Microsite.dispatcher.fire(Events.MENU_TAP_ACTIVE), A();
-                else {
-                    m = a.currentTarget._href;
-                    a = x(m);
-                    if (!Sys.isAndroid) {
-                        var b =
-                            r[a].linkEl;
-                        Utils.resetTransition(b);
-                        b.style.opacity = 0.2;
-                        setTimeout(function () {
-                            b.style.opacity = 1;
-                            Utils.transition(b, "opacity", "400ms ease-in-out")
-                        }, 0)
-                    }
-                    v(a);
-                    setTimeout(function () {
-                        Microsite.navigate(m)
-                    }, Sys.isIPad ? 600 : 900);
-                    setTimeout(function () {
-                        A(!0)
-                    }, 450)
-                }
-            }, v = function (a) {
-                p = a;
-                l = -1 != p ? r[p].label : Config.strings.navOpen;
-                D(l);
-                C();
-                Utils.transition(f, "all", "430ms cubic-bezier(0,0,0.005,1)", !0);
-                w()
-            }, w = function () {
-                var a = play("logo");
-                if (0 == p || 0.7 > Sys.deviceScaleFactor && 1 == p) {
-                    var b = f.offsetHeight + 1;
-                    1 == p && (b *= 0.85);
-                    Utils.translate(a, "0px", b + "px");
-                    Utils.transition(a, "transform", "300ms cubic-bezier(0,0,0,1)");
-                    y = !0
-                } else y && (Utils.translate(a, "0px", "0px"), Utils.transition(a, "transform", "350ms ease-in-out"), y = !1)
-            }, z = function () {
-                n || (Main.hideLocationBar(), F(), d.style.visibility = "visible", setTimeout(function () {
-                    d.style.opacity = 1;
-                    Utils.transition(d, "opacity", "0.5s ease-in-out")
-                }, 0), Utils.transitionName ? (Utils.translate(e, "0px", "-1px"), Utils.transition(e, "transform", "0.65s cubic-bezier(0.25,0,0,1)")) : (E.y = b, E.trans(e,
-                    0, -1)), Utils.resetTransition(k), k.style.opacity = 0, k.style.visibility = "visible", Utils.translate(k, "0px", Math.round(a - 0.11 * Main.stage.height) + "px"), setTimeout(function () {
-                    k.style.opacity = 1;
-                    Utils.translate(k, "0px", a + "px");
-                    Utils.transition(k, "all", "0.65s cubic-bezier(0.25,0,0,1)")
-                }, 0), n = !0, D(Config.strings.navClose), C(), Microsite.dispatcher.fire(Events.MENU_OPEN), k.addEventListener(Sys.supports.touch ? "touchstart" : "mousedown", G, !1))
-            }, A = function (c) {
-                if (n) {
-                    d.style.opacity = 0;
-                    Utils.transition(d, "opacity", "450ms ease-in-out");
-                    setTimeout(function () {
-                        d.style.visibility = "hidden"
-                    }, 501);
-                    if (Utils.transitionName) {
-                        var g = c ? 650 : 500;
-                        c = c ? "0.6,0,0,1" : "0.5,0,0,1";
-                        Utils.translate(e, "0px", b + "px");
-                        Utils.transition(e, "transform", g + "ms cubic-bezier(" + c + ")")
-                    } else E.y = -1, E.trans(e, 0, b);
-                    k.style.opacity = 0;
-                    Utils.translate(k, "0px", a - 25 + "px");
-                    Utils.transition(k, "all", "200ms ease-in-out");
-                    setTimeout(function () {
-                        k.style.visibility = "hidden"
-                    }, 300);
-                    D(l);
-                    C();
-                    n = !1;
-                    Microsite.dispatcher.fire(Events.MENU_CLOSE);
-                    k.removeEventListener(Sys.supports.touch ? "touchstart" :
-                        "mousedown", G, !1)
-                }
-            }, G = function (a) {
-                a.target == a.currentTarget && A()
-            }, D = function (a) {
-                a != g.innerHTML && (g.innerHTML = a)
-            }, C = function () {
-                var a, b, c, d, e; - 1 == p ? (a = r[0].stripeEl.offsetWidth, b = Math.round(0.5 * (Main.stage.width - a)), d = "rgb(224, 224, 224)", c = h, e = s) : (c = r[p].stripeEl, a = Math.max(g.offsetWidth + 20, c.offsetWidth), b = c.offsetLeft, b + a > Main.stage.width && (b = c.offsetLeft + c.offsetWidth - a), d = r[p].bgColor, c = "#FFFFFF", e = "0px 0px #FFFFFF");
-                var k = getComputedStyle(f);
-                k.color != c && (f.style.color = c);
-                k.backgroundColor != d &&
-                    (f.style.backgroundColor = d);
-                f.style.width = a + "px";
-                f.style.textShadow = e;
-                Sys.isIPad || !Sys.isMobile ? setTimeout(function () {
-                    H(a)
-                }, 0) : H(a);
-                Utils.translate(f, b + "px", "0px")
-            }, H = function (a) {
-                var b = f.offsetHeight,
-                    c = 1.3 * a,
-                    g = 1.8 * b;
-                q.style.width = c + "px";
-                q.style.height = g + "px";
-                Utils.translate(q, Math.round(0.5 * (a - c)) + "px", Math.round(0.5 * (b - g)) + "px")
-            }, F = function () {
-                d.style.width = Main.stage.width + 10 + "px";
-                d.style.height = Main.stage.height + c + "px";
-                Utils.translate(d, "-1px", "-1px")
-            }, E = {
-                el: null,
-                x: 0,
-                y: 0,
-                iv: -1,
-                run: function (a, b) {
-                    0.4 >
-                        Math.abs(a - this.x) && 0.4 > Math.abs(b - this.y) ? (this.x = a, this.y = b, clearInterval(this.iv)) : (this.x += 0.2 * (a - this.x), this.y += 0.2 * (b - this.y));
-                    Utils.translate(this.el, this.x + "px", this.y + "px")
-                },
-                trans: function (a, b, c) {
-                    this.el = a;
-                    var g = this;
-                    this.iv = setInterval(function () {
-                        g.run(b, c)
-                    }, 16)
-                }
-            };
-        return {
-            init: function () {
-                d = play("menu-bg");
-                c = Sys.isAndroid ? 70 : 10;
-                k = play("menu-info");
-                k.style.top = "0px";
-                e = play("nav");
-                e.style.top = "0px";
-                Sys.isAndroid && /Firefox/.test(navigator.userAgent);
-                for (var a = 0, b = e.children.length; a < b; a++) {
-                    var m = e.children[a];
-                    if (-1 != m.id.indexOf("nav-stripe")) {
-                        var n = m.getElementsByTagName("a")[0],
-                            A = n.href; - 1 == A.indexOf("#") && (m.addEventListener("touchstart", u, !1), m.addEventListener("click", u, !1), m._href = A, n.href = "javascript:void(0)", Sys.supports.touch && Utils.addClass(n, "no-hover"), r.push({
-                                url: A,
-                                label: n.textContent,
-                                bgColor: getComputedStyle(m).backgroundColor,
-                                stripeEl: m,
-                                linkEl: n
-                            }))
-                    }
-                }
-                p = x(Microsite.getPageURL());
-                l = -1 != p ? r[p].label : Config.strings.navOpen;
-                f = play("menu-open-btn");
-                f.addEventListener(Sys.supports.touch ? "touchstart" :
-                    "click", B, !1);
-                a = getComputedStyle(f);
-                s = a.textShadow;
-                h = a.color;
-                if (5 <= Sys.iOSVersion || 4 <= Sys.androidVersion || !Sys.isMobile) f.style[Utils.vendorPrefix + "box-shadow"] = 0.7 < Sys.deviceScaleFactor ? "0px 4px 4px 1px rgba(0, 0, 0, 0.1)" : "0px 2px 2px 1px rgba(0, 0, 0, 0.1)";
-                g = document.createElement("span");
-                D(l);
-                f.innerHTML = "";
-                f.appendChild(g);
-                q = document.createElement("div");
-                q.id = "openBTN-hitArea";
-                q.style.position = "absolute";
-                q.style.left = "0px";
-                q.style.top = "0px";
-                f.appendChild(q);
-                setTimeout(function () {
-                    var a = f.offsetWidth;
-                    f.parentNode.parentNode.appendChild(f);
-                    f.style.width = a + "px";
-                    f.style.left = "0px";
-                    C()
-                }, 0);
-                Microsite.dispatcher.on(Events.NAVIGATE, t);
-                w()
-            },
-            open: z,
-            close: A,
-            resize: function () {
-                a = Math.round(0.5 * Main.stage.height);
-                b = -a + 0.01 * Main.stage.height;
-                e.style.height = a + "px";
-                Utils.resetTransition(k);
-                k.style.height = a + "px";
-                Utils.translate(k, "0px", a + "px");
-                Utils.resetTransition(e);
-                Utils.translate(e, "0px", (n ? -1 : b) + "px");
-                Utils.resetTransition(f);
-                C();
-                n && F();
-                if (Sys.isAndroid) {
-                    var c = Main.stage.width / r.length,
-                        g = r[r.length - 1].stripeEl;
-                    g.style.position = "absolute";
-                    g.style.left = Main.stage.width - c - 1 + "px";
-                    g.style.top = "0px";
-                    g.style.width = c + 3 + "px"
-                }
-            },
-            isOpen: function () {
-                return n
-            },
-            moveTo: function (a, c, g) {
-                void 0 != a && (void 0 == c && (c = n ? -1 : b), Utils.translate(e, a + "px", c + "px"), g && Utils.transition(e, "transform", g))
-            },
-            setSelected: v
-        }
-    }(),
+
     Sys = function () {
         var a = navigator.userAgent,
             b = a.match(/iPhone/i),
@@ -801,49 +377,7 @@ var Config = {
         }
     }();
 
-function ClickProxy(a, b, c) {
-    this.el = a;
-    this.callback = b;
-    this.scope = c;
-    this.thresh = 4;
-    this.dY = this.dX = this.startY = this.startX = 0;
-    this.hasMoved = !1;
-    this.onMoveDel = Utils.delegate(this, this.onMove);
-    this.delOnDown = Utils.delegate(this, this.onDown);
-    this.delOnUp = Utils.delegate(this, this.onUp);
-    Sys.supports.touch ? (this.el.addEventListener("touchstart", this.delOnDown, !1), this.el.addEventListener("touchend", this.delOnUp, !1), this.el.addEventListener("click", this.preventDefault, !1)) : (this.el.addEventListener("mousedown",
-        this.delOnDown, !1), this.el.addEventListener("click", this.delOnUp, !1))
-}
-ClickProxy.prototype.onDown = function (a) {
-    a = this.getEv(a);
-    this.startX = a.pageX;
-    this.startY = a.pageY;
-    this.dY = this.dX = 0;
-    this.hasMoved = !1;
-    this.el.addEventListener(Sys.supports.touch ? "touchmove" : "mousemove", this.onMoveDel, !1)
-};
-ClickProxy.prototype.onUp = function (a) {
-    this.el.removeEventListener(Sys.supports.touch ? "touchmove" : "mousemove", this.onMoveDel, !1);
-    this.hasMoved || this.callback.apply(this.scope, [a]);
-    a.preventDefault()
-};
-ClickProxy.prototype.onMove = function (a) {
-    a = this.getEv(a);
-    this.dX = a.pageX - this.startX;
-    this.dY = a.pageY - this.startY;
-    if (Math.abs(this.dX) > this.thresh || Math.abs(this.dY) > this.thresh) this.hasMoved = !0, this.el.removeEventListener(Sys.supports.touch ? "touchmove" : "mousemove", this.onMoveDel, !1)
-};
-ClickProxy.prototype.remove = function () {
-    Sys.supports.touch ? (this.el.removeEventListener("touchstart", this.delOnDown, !1), this.el.removeEventListener("touchend", this.delOnUp, !1), this.el.removeEventListener("click", this.preventDefault, !1)) : (this.el.removeEventListener("mousedown", this.delOnDown, !1), this.el.removeEventListener("click", this.delOnUp, !1));
-    this.el.removeEventListener(Sys.supports.touch ? "touchmove" : "mousemove", this.onMoveDel, !1);
-    this.scope = this.callback = null
-};
-ClickProxy.prototype.preventDefault = function (a) {
-    a.preventDefault()
-};
-ClickProxy.prototype.getEv = function (a) {
-    return Sys.supports.touch ? a.touches[0] : a
-};
+
 var MathUtils = function () {
     function a(a, e) {
         var d = a - e;
@@ -992,348 +526,6 @@ var MathUtils = function () {
                 c && window.removeEventListener("devicemotion", b, !1)
             }
         }
-    }(),
-    Simulator = function () {
-        function a() {
-            var a = window.innerHeight,
-                b = Math.round(0.5 * window.innerWidth) + f,
-                c = Math.round(0.5 * a) + l,
-                g = p ? d : e;
-            m = MathUtils.clamp(a - (p ? q : 1.3 * q), 400, g) / g;
-            t.style.left =
-                b + "px";
-            t.style.top = c + "px";
-            Utils.resetTransition(t);
-            Utils.transform(t, "scale(" + m + ")")
-        }
-
-        function b(a, b) {
-            var c = a ? k : g,
-                d = a ? g : k,
-                e = a ? 1 : -1;
-            w.style.width = c + "px";
-            w.style.height = d + "px";
-            w.style.left = 1 + Math.round(0.5 * -c) + "px";
-            w.style.top = e + Math.round(0.5 * -d) + "px";
-            Utils.rotate(w, b)
-        }
-
-        function c(a, b) {
-            var c = a ? n : r;
-            v.style.width = c + "px";
-            v.style.top = Math.round(0.5 * (a ? d : e)) + 1 + "px";
-            v.style.left = Math.round(0.5 * -c) + "px";
-            v.style.backgroundPosition = (a ? 0 : -n) + "px 0px";
-            b && (Utils.resetTransition(v), v.style.opacity = 0, setTimeout(function () {
-                v.style.opacity =
-                    1;
-                Utils.transition(v, "opacity", "650ms ease-in-out")
-            }, 650))
-        }
-
-        function h() {
-            setTimeout(function () {
-                s = !1
-            }, 150);
-            Utils.resetTransition(w);
-            Utils.resetTransition(u);
-            Utils.resetTransition(t)
-        }
-        var e = 996,
-            d = 1276,
-            k = 768,
-            g = 1024,
-            q = 100,
-            f = 0,
-            l = -2,
-            n = 996,
-            r = 2272 - n,
-            m = 1,
-            p = !0,
-            s = !1,
-            y = 0,
-            x = 0,
-            B, t, u, v, w, z;
-        return {
-            init: function () {
-                (B = play("awards-container")) && AwardsOverlay.init();
-                Sys.isOnline || (q = -100);
-                u = play("device");
-                v = play("device-reflection");
-                w = play("main");
-                w.style.position = "absolute";
-                w.style.overflow = "hidden";
-                Utils.setTransformOrigin(w, "50% 50%");
-                u.style.display = "block";
-                u.style.position = "absolute";
-                u.style.left = Math.round(0.5 * -e) + "px";
-                u.style.top = Math.round(0.5 * -d) + "px";
-                u.style.width = e + "px";
-                u.style.height = d + "px";
-                u.addEventListener("mousedown", function (a) {
-                    a.preventDefault()
-                }, !1);
-                Utils.setSelectable(u, !1);
-                u.style[Utils.vendorPrefix + "user-select"] = "none";
-                Utils.setTransformOrigin(u, "50% 50%");
-                t = document.createElement("div");
-                t.style.position = "absolute";
-                t.style.width = "1px";
-                t.style.height = "1px";
-                t.style.left = "0px";
-                t.style.top = "0px";
-                t.appendChild(v);
-                t.appendChild(u);
-                t.appendChild(w);
-                Utils.setTransformOrigin(t, "0% 0%");
-                document.body.appendChild(t);
-                z = play("toggle-orientation-btn");
-                z.style.display = "block";
-                z.href = "javascript:void(0)";
-                z.addEventListener("click", function () {
-                    Simulator.toggleOrientation()
-                });
-                z.style[Utils.vendorPrefix + "user-select"] = "none";
-                window.addEventListener("resize", a, !1);
-                a();
-                b(p, 0);
-                c(p, !1);
-                u.style.opacity = 0;
-                v.style.opacity = 0;
-                z.style.opacity = 0
-            },
-            animIn: function () {
-                u.style.opacity = 1;
-                Utils.transition(u, "opacity", "350ms ease-out");
-                v.style.opacity =
-                    1;
-                Utils.transition(v, "opacity", "350ms ease-out");
-                Utils.transform(t, "scale(" + 0.88 * m + ")");
-                setTimeout(function () {
-                    Utils.transform(t, "scale(" + m + ")" + (Sys.supports.translate3d ? " translateZ(0)" : ""));
-                    Utils.transition(t, "transform", "1250ms cubic-bezier(0, 0.9, 0, 1)")
-                }, 0);
-                setTimeout(function () {
-                    z.style.opacity = 1;
-                    Utils.transition(z, "opacity", "750ms ease-in-out")
-                }, 1750)
-            },
-            resize: a,
-            toggleOrientation: function () {
-                s || (p = !p, b(p, Math.PI * (p ? -0.5 : 0.5)), c(p, !0), x = 0, y = p ? 0 : 0.5 * -Math.PI, setTimeout(function () {
-                    a();
-                    Utils.transform(w,
-                        "rotate(" + x + "rad)");
-                    Utils.transform(u, "rotate(" + y + "rad)");
-                    Utils.transition(u, "transform", "750ms cubic-bezier(0.430, 0.000, 0.145, 1.000)");
-                    Utils.transition(w, "transform", "750ms cubic-bezier(0.430, 0.000, 0.145, 1.000)");
-                    Utils.transition(t, "transform", "750ms cubic-bezier(0.430, 0.000, 0.145, 1.000)");
-                    s = !0;
-                    setTimeout(h, 751)
-                }, 0), Microsite.dispatcher.fire(Events.SIMULATOR_ROTATE))
-            },
-            mouseGlobalToLocal: function (a) {
-                var b = t.offsetLeft,
-                    c = t.offsetTop;
-                if (!p) var d = 0.5 * (g - k) * m,
-                b = b - d, c = c + d;
-                b = a.pageX - b;
-                a = a.pageY -
-                    c;
-                var c = b + 0.5 * k,
-                    d = a + 0.5 * g,
-                    e = Math.abs(1 - 1 / m),
-                    d = d + a * e;
-                return {
-                    pageX: Math.round(c + b * e),
-                    pageY: Math.round(d)
-                }
-            }
-        }
-    }(),
-    AwardsOverlay = function () {
-        function a(b) {
-            g.removeEventListener("click", a, !1);
-            g.style.opacity = 0;
-            Utils.transition(g, "opacity", "280ms ease-in-out");
-            setTimeout(function () {
-                g.style.visibility = "hidden"
-            }, 285);
-            f.addEventListener("mouseover", c, !1);
-            f.addEventListener("mouseout", h, !1);
-            "click" == b.type && f.play();
-            h()
-        }
-
-        function b(b) {
-            g.addEventListener("click", a, !1);
-            g.style.visibility = "visible";
-            g.style.opacity =
-                1;
-            Utils.transition(g, "opacity", "280ms ease-in-out");
-            f.removeEventListener("mouseover", c, !1);
-            f.removeEventListener("mouseout", h, !1);
-            h()
-        }
-
-        function c() {
-            f.setAttribute("controls")
-        }
-
-        function h() {
-            f.removeAttribute("controls")
-        }
-
-        function e() {
-            q.removeEventListener("click", e, !1);
-            f.pause();
-            f.src = "";
-            d()
-        }
-
-        function d() {
-            k.style.opacity = 0;
-            Utils.transition(k, "opacity", "370ms ease-in-out");
-            setTimeout(function () {
-                k.style.display = "none"
-            }, 375)
-        }
-        var k, g, q, f, l;
-        return {
-            init: function () {
-                k = play("awards-container");
-                Utils.transform2(k,
-                    0, 0);
-                g = play("awards-play-btn");
-                g.addEventListener("click", a, !1);
-                q = play("awards-close-btn");
-                q.addEventListener("click", e, !1);
-                f = k.getElementsByTagName("video")[0];
-                f.removeAttribute("controls");
-                f.addEventListener("play", a, !1);
-                f.addEventListener("pause", b, !1);
-                f.addEventListener("ended", function () {
-                    f.setAttribute("poster", l)
-                }, !1);
-                f.addEventListener("click", function (b) {
-                    b.offsetY < f.height - 35 && (f.paused ? a(b) : f.pause())
-                }, !1);
-                l = f.getAttribute("poster");
-                Sys.isChrome && (f.style.display = "none", setTimeout(function () {
-                    f.style.display =
-                        "block"
-                }, 0))
-            },
-            close: e
-        }
-    }(),
-    NTLightbox = function () {
-        function a() {
-            l.pause();
-            Utils.translate(f, 0, 0);
-            f.style.opacity = 0.1;
-            setTimeout(function () {
-                f.style.opacity = 1;
-                Utils.transition(f, "opacity", "250ms ease-in-out")
-            }, 0);
-            h()
-        }
-
-        function b(b) {
-            b = b ? "addEventListener" : "removeEventListener";
-            window[b]("resize", n, !1);
-            window[b]("orientationchange", n, !1);
-            if (f) f[b](Sys.supports.touch ? "touchstart" : "click", a, !1)
-        }
-
-        function c() {
-            n();
-            b(!0);
-            g.style.opacity = 0;
-            g.style.display = "block";
-            Utils.translate(g, "0px", "0px");
-            setTimeout(function () {
-                g.style.opacity =
-                    1;
-                Utils.transition(g, "opacity", "400ms ease-out")
-            }, 0);
-            Utils.transform(q, Sys.supports.translate3d ? "translateZ(0) scale(0.015)" : "scale(0.015)");
-            setTimeout(function () {
-                Utils.transform(q, Sys.supports.translate3d ? "translateZ(0) scale(1)" : "scale(1)");
-                Utils.transition(q, "transform", "550ms cubic-bezier(0.2, 0.900, 0.000, 1.000)")
-            }, 0);
-            Microsite.dispatcher.fire(Events.NTLB_ANIM_IN)
-        }
-
-        function h() {
-            b(!1);
-            g.style.opacity = 0;
-            Utils.transition(g, "opacity", "350ms ease-in-out");
-            setTimeout(function () {
-                    g.style.display = "none"
-                },
-                351);
-            Utils.transform(q, "scale(0.9)");
-            Utils.transition(q, "transform", "350ms cubic-bezier(0.990, 0.000, 0.000, 0.995)");
-            Microsite.dispatcher.fire(Events.NTLB_ANIM_OUT)
-        }
-
-        function e() {
-            g.style.width = window.innerWidth + "px";
-            g.style.height = window.innerHeight + 2 + "px"
-        }
-
-        function d() {
-            var a = window.innerHeight;
-            l.style.width = window.innerWidth + "px";
-            l.style.height = a + "px";
-            l.style.left = "0px";
-            l.style.top = -a - 10 + "px"
-        }
-
-        function k(b) {
-            b.target == b.currentTarget && a()
-        }
-        var g, q, f, l, n, r;
-        return {
-            init: function () {
-                if (l = play("ntlb-video")) l.style.display =
-                    "block", (r = Sys.isIOS && 0.75 > Sys.deviceScaleFactor) ? (l.style.position = "absolute", l.style.zIndex = 0, n = d, n(), b(!0)) : (g = play("ntlb-container"), g.addEventListener(Sys.supports.touch ? "touchend" : "click", k, !1), q = g.getElementsByClassName("video-holder")[0], f = play("ntlb-close-btn"), f.style.cursor = "pointer", document.body.appendChild(g), n = e)
-            },
-            show: function (a) {
-                r || c();
-                l.play();
-                setTimeout(function () {
-                    var a = l.currentSrc.substring(l.currentSrc.lastIndexOf("/") + 1, l.currentSrc.lastIndexOf("."));
-                    Microsite.trackEvent("showVideo",
-                        a)
-                }, 400)
-            },
-            hide: a,
-            remove: function () {
-                r || document.body.removeChild(g);
-                b(!1);
-                r || g.removeEventListener(Sys.supports.touch ? "touchend" : "click", k, !1)
-            }
-        }
-    }(),
-    NTLightboxTrigger = function () {
-        function a(a) {
-            Utils.transform2(c, 0, 0, 0.95);
-            Utils.transition(c, "transform", "50ms ease-in-out");
-            setTimeout(function () {
-                Utils.transform2(c, 0, 0, 1);
-                Utils.transition(c, "transform", "200ms ease-in-out")
-            }, 51)
-        }
-        var b = {}, c, h, e, d, k;
-        b.init = function (b, q, f) {
-            (h = Sys.supports.hdVideo) ? (NTLightbox.init(), c = b, c.addEventListener("click", Utils.preventDefault, !1), c.addEventListener(Events.DOWN, a, !1), e = new ClickProxy(c, NTLightbox.show, NTLightbox), q && (d = q, Microsite.dispatcher.on(Events.NTLB_ANIM_IN, d)), f && (k = f, Microsite.dispatcher.on(Events.NTLB_ANIM_OUT, k))) : b && play("ntlb-video") && (play("ntlb-video").style.display = "none")
-        };
-        b.remove = function () {
-            h && (c.removeEventListener(Events.DOWN, a, !1), c = null, d && Microsite.dispatcher.off(Events.NTLB_ANIM_IN, d), k && Microsite.dispatcher.off(Events.NTLB_ANIM_OUT, k), e.remove(), NTLightbox.remove())
-        };
-        return b
     }();
 
 function play(a) {
