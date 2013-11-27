@@ -239,10 +239,10 @@ var Config = {
                 clearTimeout(n);
                 // e.style.opacity = 0;
                 Utils.transition(e, "opacity", "250ms ease-in-out");
-                n = setTimeout(function () {
-                    clearInterval(r);
-                    e.style.visibility = "hidden"
-                }, 251)
+                // n = setTimeout(function () {
+                //     clearInterval(r);
+                //     e.style.visibility = "hidden"
+                // }, 251)
             },
             resize: a
         }
@@ -1364,7 +1364,7 @@ EventDispatcher.prototype.on = function (a, b) {
     this.listeners[a].push(b)
 };
 EventDispatcher.prototype.off = function (a, b) {
-    for (var c = this.listeners[a].length; c--;) this.listeners[a][c] == b && this.listeners[a].splice(c, 1)
+    // for (var c = this.listeners[a].length; c--;) this.listeners[a][c] == b && this.listeners[a].splice(c, 1)
 };
 EventDispatcher.prototype.fire = function (a, b) {
     if (this.listeners[a]) {
