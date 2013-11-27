@@ -9,6 +9,7 @@ class App extends Spine.Controller
 				view = new Chart(el: $("article"))
 				view.render()
 			"/": ->
+				$("article").html require("views/game")()
 				Main.init()
 $ ->
 	# Highcharts.setOptions

@@ -1,0 +1,39 @@
+
+.page h2 { display:none; }
+#home h2 { display:block; }
+#strategy { height:100%; }
+
+.strategy-content { position:absolute; left:0px; top:0px; width:70%; text-align:center; color:#afbabc; background-color:rgba(255,255,255,1); -webkit-font-smoothing:antialiased; padding-top:20px; }
+.strategy-content h3 { font-size:70px; margin-bottom:25px; font-family:'NT GOTHIC BOLD', Arial, Helvetica sans; line-height:1; }
+.strategy-content p  { font-size:20px; padding:0px; color:#999 }
+.headline-shadow { text-shadow:0px -1px 0px #797c81;  }
+
+#statement  { visibility:hidden; position:absolute; left:0px; top:0px; width:100%; height:100%; color:#666666; font-family:'NT GOTHIC BOLD', Arial, Helvetica, sans; }
+.zoom-plane { position:absolute; top:0;}
+.zoom-plane .label  { position:absolute; text-align: center; letter-spacing:-1px;  font-family:'NT GOTHIC BOLD', Arial, Helvetica, sans; }
+.zoom-plane .circle { position:absolute; -webkit-border-radius:0px; border-radius:0px; }
+
+#smileys { display:none; position: absolute; }
+
+#main-copy { margin:0 auto; text-align:center; color:#b1bcbe; width:70%; padding-top:120px;  }
+#main-copy h3 { position:relative; padding:0 30px; color:#b1bcbe; font-size:100px; line-height:100%; text-align:center; margin-top:28px; margin-bottom:10px; font-family:'NT GOTHIC BOLD', Arial, Helvetica, sans; }
+#main-copy h4 { font-size:24px; font-weight:bold; margin-bottom:10px; }
+#main-copy p  { margin:0 auto 50px auto; width:80%; color:#999 }
+#main-copy.terms h3 { font-size:50px; }
+#main-copy.terms .terms-wrapper  { height:70%; overflow:auto; text-align:left; margin-top:20px }
+#main-copy.terms p { width:90% }
+
+#customers h2 { display:none; }
+#customers h3,
+#production h3 { text-shadow:0px -1px 0px #797c81; padding-top:20px; }
+#customers #main-copy { width:80%; }
+#production #main-copy { width:85%; }
+
+.mover { position:absolute; left:0px; top:0px; width:35px; height:35px; -webkit-border-radius:150px; -moz-border-radius:150px; -ms-border-radius:150px; -o-border-radius:150px; border-radius:150px; background-color:#FF9900;  }
+
+.landscape #main-copy h3 { margin-top:10px; }
+.landscape .strategy-content    { width:90%; padding-top:30px;  }
+.landscape .strategy-content h3 { font-size:70px; margin-bottom:25px; }
+.landscape .strategy-content p  { padding:0px; width:85%; margin:0 auto;  }
+.landscape #production #main-copy { width:80%; }
+.landscape #production #main-copy h3 { margin-top:40px; }
