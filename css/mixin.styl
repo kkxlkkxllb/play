@@ -90,3 +90,11 @@ hacel()
 
 wblur(px)
 	-webkit-filter: blur(px)
+
+clearfix()
+	&:before
+	&:after
+		content: ""
+		display: table
+	&:after
+		clear: both

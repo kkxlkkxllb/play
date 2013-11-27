@@ -9,7 +9,7 @@ class App extends Spine.Controller
 				view = new Chart(el: $("article"))
 				view.render()
 			"/": ->
-				$("article").empty()
+				Main.init()
 $ ->
 	# Highcharts.setOptions
 	# 	lang:

@@ -1,6 +1,6 @@
 {
   "server": {
-    "port"  : 9294
+    "port"  : 9295
   },
 
   "routes": [
@@ -26,7 +26,7 @@
       "jsAfter": "require('index')"
     },
     "css": {
-      "paths"  : ["./css","./css/lib/bootstrap.css"],
+      "paths"  : ["./css","./css/lib/bootstrap.css","./css/lib/style.css"],
       "target" : "./public/assets/application.css"
     },
     "test": {
