@@ -1,0 +1,1 @@
+`jade -P src/index.jade -o public/`cake -f src/index.jade jade:compilecake jade:index
